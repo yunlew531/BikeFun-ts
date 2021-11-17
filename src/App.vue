@@ -1,6 +1,10 @@
 <template>
   <router-view/>
+  <Footer />
 </template>
 
-<style>
-</style>
+<script lang="ts" setup>
+import { defineAsyncComponent } from 'vue'
+
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'))
+</script>

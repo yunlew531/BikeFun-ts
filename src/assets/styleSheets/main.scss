@@ -2,3 +2,12 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import './mixins.scss';
+
+body {
+  @apply font-sans;
+}
+
+img {
+  @apply object-cover;
+}
