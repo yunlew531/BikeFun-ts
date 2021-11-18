@@ -25,13 +25,16 @@ module.exports = {
           100: '#DADADA',
           200: '#C4C4C4',
           300: '#E5E5E5',
-          400: '#B6B6B6'
+          400: '#B6B6B6',
+          500: '#E0E0E0'
         }
       }
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      scale: ['group-hover'],
+    },
   },
   plugins: [],
 }

@@ -1,12 +1,12 @@
 <template>
-  <div class="home-wrap mx-auto">
+  <div>
     <div class="banner flex justify-center items-center">
       <div class="banner-contanier">
         <img class="banner-logo" src="@/assets/images/logo_white.png" alt="Bike Fun">
         <span class="block text-xl font-bold text-white-100 text-right tracking-widest">Bike Fun！自行車旅遊網</span>
       </div>
     </div>
-    <main class="relative">
+    <main class="main-wrap mx-auto relative">
       <Navigation class="absolute -top-24 left-0 right-0" />
       <section class="content-container mx-auto pt-5 pb-16">
         <img src="@/assets/images/boyWithRoute.png" alt="boy with route" class="mx-auto">
@@ -43,7 +43,13 @@
         </router-link>
         <div class="flex-grow grid grid-cols-3">
           <div class="col-span-2 flex flex-col justify-center items-start text-dark-200 p-14">
-            <p class="text-xl mb-8">自動定位、手動輸入都方便！ 快速找到離您最近的車道路線</p>
+            <p class="relative text-xl mb-8">
+              <span>自動定位、手動輸入都方便！ 快速找到離您最近的車道路線</span>
+              <img
+                src="@/assets/images/crayon.png"
+                alt="crayon image"
+                class="crayon-img absolute top-1.5 right-2 transform translate-x-1/2 rotate-2">
+            </p>
             <button type="button" class="btn flex justify-center items-center text-lg font-bold border-2 border-green-100 rounded-full py-2">
               <span class="mr-1">立刻搜尋</span>
               <span class="material-icons arrow-icon text-green-100">arrow_forward</span>
@@ -99,7 +105,7 @@ const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vu
 <style lang="scss" scoped>
 @import '~@/assets/styleSheets/mixins.scss';
 
-.home-wrap {
+.main-wrap {
   max-width: 1440px;
 }
 .banner-contanier {
@@ -164,6 +170,9 @@ const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vu
 }
 .find-site-img {
   background-image: url("~@/assets/images/index_busStation.jpg");
+}
+.crayon-img {
+  z-index: -1;
 }
 .material-icons.arrow-icon {
   transition: color 0.3s;

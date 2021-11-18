@@ -1,0 +1,1 @@
+type sortType = 'farToNear' | 'nearToFar'

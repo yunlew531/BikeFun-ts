@@ -7,10 +7,26 @@
           <span class="text-xs text-dark-100 font-light tracking-widest">Bike Fun！自行車旅遊網</span>
         </router-link>
       </h1>
-      <router-link to="/" class="nav-link flex justify-center items-center border-l border-gray-300 w-64">最新消息</router-link>
-      <router-link to="/" class="nav-link flex justify-center items-center border-l border-gray-300 w-64">探索路線</router-link>
-      <router-link to="/" class="nav-link flex justify-center items-center border-l border-gray-300 w-64">尋找站點</router-link>
-      <router-link to="/" class="nav-link flex justify-center items-center border-l border-gray-300 w-64">常見問題</router-link>
+      <router-link
+        to="/"
+        class="nav-link flex justify-center items-center border-l border-gray-300 w-64">
+        最新消息
+      </router-link>
+      <router-link
+        to="/explore"
+        class="nav-link flex justify-center items-center border-l border-gray-300 w-64">
+        探索路線
+      </router-link>
+      <router-link
+        to="/"
+        class="nav-link flex justify-center items-center border-l border-gray-300 w-64">
+        尋找站點
+      </router-link>
+      <router-link
+        to="/"
+        class="nav-link flex justify-center items-center border-l border-gray-300 w-64">
+        常見問題
+      </router-link>
     </nav>
   </div>
 </template>
@@ -28,6 +44,12 @@
   transition: background-color 0.3s, color 0.3s;
   &:hover {
     @apply text-white-100 bg-yellow-100;
+  }
+  &.active {
+    @apply text-yellow-100;
+    &:hover {
+      @apply text-white-100 bg-yellow-100;
+    }
   }
 }
 </style>
