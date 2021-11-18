@@ -30,7 +30,10 @@
             <span class="block border-b border-gray-200 leading-none">+ Read more</span>
           </router-link>
           <div class="flex justify-center items-center">
-            <button type="button" class="btn flex justify-center items-center text-lg font-bold border-2 border-green-100 rounded-full py-2">
+            <button
+              type="button"
+              class="btn flex justify-center items-center text-lg font-bold border-2 duration-200
+               border-green-100 rounded-full py-2 active:opacity-80">
               <span class="mr-1">更多最新消息</span>
               <span class="material-icons arrow-icon text-green-100">arrow_forward</span>
             </button>
@@ -50,7 +53,10 @@
                 alt="crayon image"
                 class="crayon-img absolute top-1.5 right-2 transform translate-x-1/2 rotate-2">
             </p>
-            <button type="button" class="btn flex justify-center items-center text-lg font-bold border-2 border-green-100 rounded-full py-2">
+            <button
+              type="button"
+              class="btn flex justify-center items-center text-lg font-bold border-2 duration-200
+               border-green-100 rounded-full py-2 active:opacity-80">
               <span class="mr-1">立刻搜尋</span>
               <span class="material-icons arrow-icon text-green-100">arrow_forward</span>
             </button>
@@ -67,14 +73,20 @@
           <div class="col-span-1">
             <div class="flex flex-col justify-between h-1/2 border-b border-gray-400 px-6 py-10">
               <h2 class="text-2xl text-dark-200 font-bold px-3">即時站點地圖</h2>
-                <button type="button" class="btn flex justify-center items-center text-lg font-bold border-2 border-green-100 rounded-full py-2">
+                <button
+                  type="button"
+                  class="btn flex justify-center items-center text-lg font-bold border-2 duration-200
+                   border-green-100 rounded-full py-2 active:opacity-80">
                 <span class="mr-1">立刻查看</span>
                 <span class="material-icons arrow-icon text-green-100">arrow_forward</span>
               </button>
             </div>
             <div class="flex flex-col justify-between h-1/2 px-6 py-10">
               <h2 class="text-2xl text-dark-200 font-bold px-3">服務中心資訊</h2>
-              <button type="button" class="btn flex justify-center items-center text-lg font-bold border-2 border-green-100 rounded-full py-2">
+              <button
+                type="button"
+                class="btn flex justify-center items-center text-lg font-bold border-2 duration-200
+                 border-green-100 rounded-full py-2 active:opacity-80">
                 <span class="mr-1">立刻查看</span>
                 <span class="material-icons arrow-icon text-green-100">arrow_forward</span>
               </button>
@@ -87,19 +99,24 @@
         <router-link to="/" class="block text-xl text-dark-200 mb-8">憫感忿加它棺再？琵言襟嗎賺叫要中吧？</router-link>
         <router-link to="/" class="block text-xl text-dark-200 mb-8">憫感忿加它棺再？琵言襟嗎賺叫要中吧？要萍浮現以蹤功應版有了</router-link>
         <router-link to="/" class="block text-xl text-dark-200 mb-8">襟嗎賺叫要中吧？要萍浮現以蹤功應版有了</router-link>
-        <button type="button" class="btn flex justify-center items-center text-lg font-bold border-2 border-green-100 rounded-full py-2 mx-auto">
+        <button
+          type="button"
+          class="btn flex justify-center items-center text-lg font-bold border-2 border-green-100
+          rounded-full duration-200 py-2 mx-auto active:opacity-80">
           <span class="mr-1">更多常見問題</span>
           <span class="material-icons arrow-icon text-green-100">arrow_forward</span>
         </button>
       </section>
     </main>
+    <Footer />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { defineAsyncComponent } from 'vue'
-const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vue'))
 
+const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vue'))
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'))
 </script>
 
 <style lang="scss" scoped>

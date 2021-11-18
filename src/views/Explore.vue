@@ -55,6 +55,7 @@
       </section>
       <RoutesSearchResult />
     </main>
+    <Footer />
   </div>
 </template>
 
@@ -63,6 +64,7 @@ import { defineAsyncComponent, ref } from 'vue'
 
 const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vue'))
 const RoutesSearchResult = defineAsyncComponent(() => import('@/components/Explore/RoutesSearchResult.vue'))
+const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'))
 
 const isLocate = ref(false)
 </script>
