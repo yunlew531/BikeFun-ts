@@ -4,7 +4,7 @@
     <main class="main-wrap mx-auto relative px-28">
       <Navigation class="absolute -top-24 left-0 right-0" />
       <section class="flex items-center py-4">
-        <router-link to="/">首頁</router-link>
+        <router-link to="/" class="text-dark-200">首頁</router-link>
         <span class="material-icons mx-1">chevron_right</span>
         <h4 class="text-green-100">探索路線</h4>
       </section>
@@ -49,7 +49,7 @@
         </div>
         <button
           type="button"
-          class="self-end text-white-100 bg-green-100 rounded-lg px-11 py-2 hover:opacity-80 duration-200">
+          class="self-end text-white-100 bg-green-100 rounded-lg duration-200 px-11 py-2 hover:opacity-80active:opacity-90">
           GO !
         </button>
       </section>

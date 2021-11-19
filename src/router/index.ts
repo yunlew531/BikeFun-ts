@@ -23,6 +23,23 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Explore/Route.vue')
       }
     ]
+  },
+  {
+    path: '/station',
+    name: 'Station',
+    component: () => import('@/views/Station.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Station',
+        component: () => import('@/views/Station/Index.vue')
+      },
+      {
+        path: 'map',
+        name: 'Map',
+        component: () => import('@/views/Station/Map.vue')
+      }
+    ]
   }
 ]
 
