@@ -40,6 +40,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Station/Map.vue')
       }
     ]
+  },
+  {
+    path: '/news',
+    name: 'News',
+    component: () => import('@/views/News.vue')
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'NotFound',
+    component: () => import('@/views/NotFound.vue')
   }
 ]
 
@@ -47,6 +57,13 @@ const router = createRouter({
   history: createWebHashHistory(),
   linkActiveClass: 'active',
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.name === 'News') return next()
+
+  window.scrollTo(0, 0)
+  next()
 })
 
 export default router

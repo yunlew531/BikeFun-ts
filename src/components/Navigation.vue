@@ -8,7 +8,7 @@
         </router-link>
       </h1>
       <router-link
-        to="/"
+        to="/news"
         class="nav-link flex justify-center items-center border-l border-gray-300 w-full">
         最新消息
       </router-link>

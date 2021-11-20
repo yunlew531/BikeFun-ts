@@ -1,7 +1,7 @@
 <template>
-  <div class="explore-wrap">
+  <div class="explore-wrap flex flex-col">
     <div class="banner"></div>
-    <main class="main-wrap mx-auto relative px-28">
+    <main class="main-wrap flex-grow mx-auto relative px-28">
       <Navigation class="absolute -top-24 left-0 right-0" />
       <section class="flex items-center py-4">
         <router-link to="/" class="text-dark-200">首頁</router-link>
@@ -30,30 +30,55 @@
           </div>
         </div>
         <div class="flex-grow">
-          <label class="flex items-center mb-12 mr-24">
-            <span class="inline-block w-36 text-dark-200">路線關鍵字</span>
-            <input
-              type="text"
-              class="flex-grow border border-gray-100 rounded-lg p-3 focus:outline-none "
-              placeholder="請輸入關鍵字"
-            >
-          </label>
+          <div class="flex items-center mb-12 mr-24">
+            <span class="inline-block w-36 text-dark-200">選擇縣市</span>
+            <div class="flex-grow relative">
+              <button
+                type="button"
+                class="w-full border border-gray-100 text-gray-600 text-left rounded-lg p-3 mb-2"
+                @click="isCityListShow = !isCityListShow"
+              >
+                {{ typeof tempCity === 'string' ? tempCity : tempCity.chinese }}
+              </button>
+              <div class="absolute left-0 right-0 z-10">
+                <ul
+                  v-show="isCityListShow"
+                  data-simplebar
+                  data-simplebar-auto-hide="false"
+                  class="city-list border border-gray-100 bg-white-100 shadow-lg rounded-lg"
+                >
+                  <li
+                    v-for="city in cities.data"
+                    :key="city.chinese"
+                    class="city-item cursor-pointer p-3 mr-4 hover:bg-gray-50 hover:text-green-100"
+                    @click="selectCity(city)"
+                  >
+                    {{ city.chinese }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
           <label class="flex items-center mr-24">
-            <span class="inline-block w-36 text-dark-200">手動輸入地址</span>
+            <span class="inline-block w-36 text-dark-200">關鍵字</span>
             <input
+              v-model="searchText"
               type="text"
-              class="flex-grow border border-gray-100 rounded-lg p-3 focus:outline-none "
+              class="flex-grow border border-gray-100 rounded-lg p-3 focus:outline-none"
               placeholder="請輸入關鍵字"
             >
           </label>
         </div>
         <button
           type="button"
-          class="self-end text-white-100 bg-green-100 rounded-lg duration-200 px-11 py-2 hover:opacity-80active:opacity-90">
+          class="search-btn self-end text-white-100 bg-green-100 rounded-lg duration-200 px-11 py-2 hover:opacity-80 active:opacity-90"
+          :disabled="tempCity === '請選擇縣市'"
+          @click="searchRoute"
+        >
           GO !
         </button>
       </section>
-      <RoutesSearchResult />
+      <RoutesSearchResult :bikeRoutes="bikeRoutes" @sort="handleSort" />
     </main>
     <Footer />
   </div>
@@ -61,19 +86,89 @@
 
 <script lang="ts" setup>
 import { defineAsyncComponent, ref } from 'vue'
+import { getDistance } from 'geolib'
+import 'simplebar-vue/dist/simplebar.min.css'
+import 'simplebar-vue/dist/simplebar-vue.js'
+import cities from '@/assets/json/city.json'
+import { apiSearchRoute } from '@/api'
 
 const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vue'))
 const RoutesSearchResult = defineAsyncComponent(() => import('@/components/Explore/RoutesSearchResult.vue'))
 const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'))
 
+const tempCity = ref<City | '請選擇縣市'>('請選擇縣市')
 const isLocate = ref(false)
+const isCityListShow = ref(false)
+
+const selectCity = (city: City) => {
+  tempCity.value = city
+  isCityListShow.value = false
+}
+const searchText = ref('')
+
+const bikeRoutes = ref<BikeRoute[]>()
+const searchRoute = async () => {
+  if (tempCity.value === '請選擇縣市') return
+
+  try {
+    let data: BikeRoute[]
+    if (searchText.value) {
+      ({ data } = await apiSearchRoute(tempCity.value.eng, searchText.value))
+    } else {
+      ({ data } = await apiSearchRoute(tempCity.value.eng))
+    }
+    data.forEach((bikeRoute, idx) => {
+      data[idx].distance = calcDistance(bikeRoute.Geometry)
+    })
+    data.sort((a, b) => Number(a.distance) - Number(b.distance))
+    bikeRoutes.value = data
+  } catch (err) { console.dir(err) }
+}
+
+const calcDistance = (geometry: string) => {
+  const [longitude, latitude] = geometry.split('((')[1].split(',')[0].split(' ')
+
+  let meters = 0
+  if (myPosition.value?.latitude) {
+    meters = getDistance(
+      { latitude: myPosition.value.latitude, longitude: myPosition.value.longitude },
+      { latitude, longitude }
+    )
+  }
+  const km = (meters / 1000).toFixed(1)
+
+  return km
+}
+
+const handleSort = (sortType: string) => {
+  if (!bikeRoutes.value?.length) return
+
+  if (sortType === 'nearToFar') {
+    bikeRoutes.value.sort((a, b) => Number(a.distance) - Number(b.distance))
+  } else if (sortType === 'farToNear') {
+    bikeRoutes.value.sort((a, b) => Number(b.distance) - Number(a.distance))
+  }
+}
+
+const myPosition = ref<Coordinate>()
+const getLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      myPosition.value = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      }
+    })
+  }
+}
+getLocation()
 </script>
 
 <style lang="scss" scoped>
 @import '~@/assets/styleSheets/mixins';
 
 .explore-wrap {
-  min-height: calc(100vh - 81px);
+  min-height: calc(100vh);
 }
 .banner {
   @include bg-style;
@@ -82,8 +177,26 @@ const isLocate = ref(false)
 }
 .main-wrap {
   max-width: 1440px;
+  width: 100%;
 }
 .explore-search {
   box-shadow: 1px 4px 12px rgba(0, 0, 0, 0.2);
+}
+.city-list {
+  height: 300px;
+}
+.city-item {
+  @apply border-b border-gray-100;
+  &:last-of-type {
+    @apply border-0;
+  }
+}
+.search-btn {
+  &:disabled {
+    @apply bg-gray-600;
+    &:hover {
+      @apply opacity-100
+    }
+  }
 }
 </style>

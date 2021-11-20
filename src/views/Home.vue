@@ -13,7 +13,7 @@
         <p class=" text-dark-200 leading-normal">便。告全禱我王劈有哇汐懇久給，分網呢瑄度不期清？資空有，沾對路韜空文近建回屠樞快錯樣沒卻遂人到騷不胡辨音次結，盪陳車，比反網己使。它栽！虛四是甚首；翩鏢社果捐貨話買啊？炭沾強三管期、同題己我己…、鵰章措秩合到公話慈在期不金議是曹搬大愛成以章陳要喜區跨，星退傑狗市蓉都利娟車龍人廿西美法沖憐為誰提嗜？裊張前廬狸中定，老靶五嘉慶卸太神戰經我重的，直看意澡每崎入因北用厚；要便，平是直找頒徊核艱至又放想工。</p>
       </section>
       <section class="latest-news-panel flex border-t border-b border-gray-400 -mb-px">
-        <router-link to="/" class="latest-news-link flex justify-center items-center font-bold text-yellow-100 text-2xl border-r border-gray-400">
+        <router-link to="/news" class="latest-news-link flex justify-center items-center font-bold text-yellow-100 text-2xl border-r border-gray-400">
           最新消息
         </router-link>
         <div class="flex-grow grid grid-cols-3">
@@ -33,7 +33,9 @@
             <button
               type="button"
               class="btn flex justify-center items-center text-lg font-bold border-2 duration-200
-               border-green-100 rounded-full py-2 active:opacity-80">
+               border-green-100 rounded-full py-2 active:opacity-80"
+              @click="router.push('/news')"
+            >
               <span class="mr-1">更多最新消息</span>
               <span class="material-icons arrow-icon text-green-100">arrow_forward</span>
             </button>
@@ -41,7 +43,7 @@
         </div>
       </section>
       <section class="explore-routes-panel flex border-t border-b border-gray-400 -mb-px">
-        <router-link to="/" class="explore-routes-link flex justify-center items-center font-bold text-yellow-100 text-2xl border-r border-gray-400">
+        <router-link to="/explore" class="explore-routes-link flex justify-center items-center font-bold text-yellow-100 text-2xl border-r border-gray-400">
           探索路線
         </router-link>
         <div class="flex-grow grid grid-cols-3">
@@ -56,7 +58,9 @@
             <button
               type="button"
               class="btn flex justify-center items-center text-lg font-bold border-2 duration-200
-               border-green-100 rounded-full py-2 active:opacity-80">
+               border-green-100 rounded-full py-2 active:opacity-80"
+              @click="router.push('/explore')"
+            >
               <span class="mr-1">立刻搜尋</span>
               <span class="material-icons arrow-icon text-green-100">arrow_forward</span>
             </button>
@@ -65,7 +69,7 @@
         </div>
       </section>
       <section class="find-site-panel flex border-t border-b border-gray-400 -mb-px">
-        <router-link to="/" class="find-site-link flex justify-center items-center font-bold text-yellow-100 text-2xl border-r border-gray-400">
+        <router-link to="/station" class="find-site-link flex justify-center items-center font-bold text-yellow-100 text-2xl border-r border-gray-400">
           尋找站點
         </router-link>
         <div class="flex-grow grid grid-cols-3">
@@ -76,7 +80,9 @@
                 <button
                   type="button"
                   class="btn flex justify-center items-center text-lg font-bold border-2 duration-200
-                   border-green-100 rounded-full py-2 active:opacity-80">
+                   border-green-100 rounded-full py-2 active:opacity-80"
+                  @click="router.push('/station')"
+                >
                 <span class="mr-1">立刻查看</span>
                 <span class="material-icons arrow-icon text-green-100">arrow_forward</span>
               </button>
@@ -114,9 +120,12 @@
 
 <script lang="ts" setup>
 import { defineAsyncComponent } from 'vue'
+import { useRouter } from 'vue-router'
 
 const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vue'))
 const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'))
+
+const router = useRouter()
 </script>
 
 <style lang="scss" scoped>

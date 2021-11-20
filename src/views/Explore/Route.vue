@@ -17,8 +17,8 @@
         <div ref="routeRef" class="route-panel">
           <div class="flex relative">
             <Navigation class="absolute -top-24 left-0 right-0"/>
-            <div class="map border border-red-500"></div>
-            <div class=" flex-grow border bg-white-100 px-10 py-4">
+            <div class="map"></div>
+            <div class=" flex-grow bg-white-100 px-10 py-4">
               <div class="flex items-center py-4 mb-32">
                 <router-link to="/">首頁</router-link>
                 <span class="material-icons mx-1">chevron_right</span>
@@ -87,6 +87,7 @@
 
 <script lang="ts" setup>
 import { defineAsyncComponent, ref, onMounted, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useWheel } from '@/composition/handleWheel'
 import Footer from '@/components/Footer.vue'
 
@@ -109,6 +110,9 @@ watch(wheelDirection, (direction) => {
     routeRefTranslateY.value = height
   }
 })
+
+const route = useRoute()
+console.log('log => ', route.query)
 
 const setRoutePanel = () => {
   setTimeout(() => {
