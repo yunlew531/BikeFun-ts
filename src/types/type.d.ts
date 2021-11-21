@@ -6,18 +6,18 @@ interface City {
 }
 
 interface BikeRoute {
-  AuthorityName: string;
-  City: string;
-  CyclingLength: number;
-  FinishedTime: string;
-  Geometry: string;
-  RoadSectionEnd: string;
-  RoadSectionStart: string;
-  RouteName: string;
-  Town: string;
-  UpdateTime: string;
-  distance: string;
-  photo: string;
+  AuthorityName?: string;
+  City?: string;
+  CyclingLength?: number;
+  FinishedTime?: string;
+  Geometry?: string;
+  RoadSectionEnd?: string;
+  RoadSectionStart?: string;
+  RouteName?: string;
+  Town?: string;
+  UpdateTime?: string;
+  distance?: string;
+  photo?: string;
 }
 
 interface Coordinate {
@@ -28,4 +28,39 @@ interface Coordinate {
 interface Pages {
   current?: number;
   total?: number;
+}
+
+type LatLonArr = Array<[number, number]>
+
+interface RestaurantPosition {
+  PositionLat: number;
+  PositionLon: number;
+}
+
+interface NearRestaurant {
+  Address: string;
+  City: string;
+  Description: string;
+  ID: string;
+  Name: string;
+  OpenTime: string;
+  ParkingInfo: string;
+  Phone: string;
+  Position: RestaurantPosition;
+  ZipCode: string;
+  Picture: { PictureUrl1: string }
+}
+
+interface NearAttraction {
+  Address: string;
+  City: string;
+  Description: string;
+  ID: string;
+  Name: string;
+  OpenTime: string;
+  ParkingInfo: string;
+  Phone: string;
+  Position: RestaurantPosition;
+  ZipCode: string;
+  Picture: { PictureUrl1: string }
 }

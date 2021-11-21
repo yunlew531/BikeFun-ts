@@ -3,45 +3,60 @@
     <main class="main-wrap overflow-hidden">
       <section class="banner-bg absolute w-full left-0 right-0 flex justify-center items-center">
         <div class="divide relative">
-          <span class="block absolute text-white-100 text-5xl font-bold left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            下坪自行車道
+          <span class="block absolute text-white-100 text-5xl font-bold tracking-widest leading-normal left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            {{ bikeRoute.RouteName }}
           </span>
         </div>
         <div class="w-7 h-12 absolute left-1/2 bottom-40 transform -translate-x-1/2 border-2 border-white-100 rounded-full">
           <div class="mouse-wheel absolute left-1/2 top-2 w-2 h-2 bg-white-100 rounded-full"></div>
         </div>
-        <!-- <img src="@/assets/images/slideDown.png" alt="滑鼠滾動" class="absolute left-1/2 bottom-40 transform -translate-x-1/2"> -->
       </section>
       <section class="route-container flex flex-col relative z-10 mx-auto">
         <div class="flex-grow"></div>
         <div ref="routeRef" class="route-panel">
           <div class="flex relative">
             <Navigation class="absolute -top-24 left-0 right-0"/>
-            <div class="map"></div>
+            <Leaflet
+              ref="leafLetRef"
+              class="map"
+              :bikeLine="latLonArr"
+              :restaurants="nearRestaurants"
+              :attractions="nearAttractions"
+              :kilometer="kilometer"
+              @hideRestaurant="isRestaurantsShow = false"
+              @hideAttraction="isAttractionsShow = false"
+            />
             <div class=" flex-grow bg-white-100 px-10 py-4">
-              <div class="flex items-center py-4 mb-32">
-                <router-link to="/">首頁</router-link>
+              <div class="flex items-start py-4 mb-32">
+                <router-link to="/" class="flex-shrink-0">首頁</router-link>
                 <span class="material-icons mx-1">chevron_right</span>
-                <router-link to="/explore">探索路線</router-link>
+                <router-link to="/explore" class="flex-shrink-0">探索路線</router-link>
                 <span class="material-icons mx-1">chevron_right</span>
-                <h4 class="text-green-100">下坪自行車道</h4>
+                <h4 class="text-green-100">{{ bikeRoute.RouteName }}</h4>
               </div>
-              <div class="flex mb-6">
-                <h2 class="mr-auto text-dark-200 text-2xl font-bold">下坪自行車道</h2>
+              <div class="flex items-start mb-6">
+                <h2 class="title text-dark-200 text-2xl font-bold mr-auto">{{ bikeRoute.RouteName }}</h2>
                 <button
                   type="button"
-                  class=" text-green-100 border border-green-100 rounded-full duration-200 px-8 py-1
+                  class="flex-shrink-0 text-green-100 border border-green-100 rounded-full duration-200 px-8 py-1
                   hover:text-white-100 hover:bg-green-100 active:opacity-80">
                   儲存此路線
                 </button>
               </div>
               <p class="flex items-center mb-4">
                 <span class="material-icons text-yellow-100 mr-1">room</span>
-                <span class="text-dark-200">557 南投縣竹山鎮投45鄉道7號</span>
+                <span class="text-dark-200">
+                  {{ bikeRoute.RoadSectionStart }} -
+                  {{ bikeRoute.RoadSectionEnd }}
+                </span>
               </p>
               <p class="flex items-center mb-12">
                 <span class="material-icons text-yellow-100 mr-1">ramp_left</span>
-                <span class="text-dark-200">雙向 15.1公里</span>
+                <span v-if="bikeRoute.CyclingLength" class="text-dark-200">
+                  雙向
+                  {{ (bikeRoute.CyclingLength / 1000).toFixed(1) }}
+                  公里
+                </span>
               </p>
               <div class="flex">
                 <div class="flex-grow">
@@ -49,12 +64,12 @@
                     <h3 class="text-dark-200 mr-4">附近推薦美食</h3>
                     <span
                       class="block relative w-28 h-11 rounded-full shadow-inner cursor-pointer duration-200 p-1"
-                      :class="showRestaurants ? 'bg-green-100' : 'bg-gray-100'"
-                      @click="showRestaurants = !showRestaurants"
+                      :class="isRestaurantsShow ? 'bg-green-100' : 'bg-gray-100'"
+                      @click="handleRestaurantsShow"
                     >
                       <span
                         class="inline-block absolute w-9 h-9 bg-white-100 rounded-full duration-200"
-                        :class="showRestaurants ? 'right-full transform translate-x-10' : 'right-1'"
+                        :class="isRestaurantsShow ? 'right-full transform translate-x-10' : 'right-1'"
                       >
                       </span>
                     </span>
@@ -63,12 +78,12 @@
                     <h3 class="text-dark-200 mr-4">附近推薦景點</h3>
                     <span
                       class="block relative w-28 h-11 rounded-full shadow-inner cursor-pointer duration-200 p-1"
-                      :class="showAttractions ? 'bg-green-100' : 'bg-gray-100'"
-                      @click="showAttractions = !showAttractions"
+                      :class="isAttractionsShow ? 'bg-green-100' : 'bg-gray-100'"
+                      @click="handleAttractionsShow"
                     >
                       <span
                         class="inline-block absolute w-9 h-9 bg-white-100 rounded-full duration-200"
-                        :class="showAttractions ? 'right-full transform translate-x-10' : 'right-1'"
+                        :class="isAttractionsShow ? 'right-full transform translate-x-10' : 'right-1'"
                       >
                       </span>
                     </span>
@@ -89,18 +104,20 @@
 import { defineAsyncComponent, ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useWheel } from '@/composition/handleWheel'
+import { chineseToEng } from '@/mixins/translateCity'
+import { apiSearchRoute, apiGetNearRestaurants, apiGetNearAttractions } from '@/api'
 import Footer from '@/components/Footer.vue'
+import Leaflet from '@/components/Leaflet.vue'
 
 const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vue'))
 
-const showRestaurants = ref(false)
-const showAttractions = ref(false)
-
+const route = useRoute()
+const { wheelDirection } = useWheel()
+const isRestaurantsShow = ref(false)
+const isAttractionsShow = ref(false)
 const routeRef = ref()
 const routeRefTranslateY = ref<number>()
 const translateY = computed(() => `translateY(${routeRefTranslateY.value}px)`)
-
-const { wheelDirection } = useWheel()
 
 watch(wheelDirection, (direction) => {
   if (direction === 'down') {
@@ -111,20 +128,101 @@ watch(wheelDirection, (direction) => {
   }
 })
 
-const route = useRoute()
-console.log('log => ', route.query)
-
 const setRoutePanel = () => {
   setTimeout(() => {
     routeRef.value.style.transition = 'transform 0.3s'
-  }, 300)
+  }, 500)
   const height: number = routeRef.value.offsetHeight
   routeRefTranslateY.value = height
 }
 
+const nearRestaurants = ref<NearRestaurant[]>()
+const getRestaurants = async () => {
+  if (!latLonArr.value.length) return
+  const middleIdx = Math.floor(latLonArr.value.length / 2)
+  const [latitude, longitude] = latLonArr.value[middleIdx]
+
+  try {
+    const { data } = await apiGetNearRestaurants(latitude, longitude)
+    nearRestaurants.value = data
+  } catch (err) { console.dir(err) }
+}
+
+const nearAttractions = ref<NearAttraction[]>()
+const getAttractions = async () => {
+  if (!latLonArr.value.length) return
+  const middleIdx = Math.floor(latLonArr.value.length / 2)
+  const [latitude, longitude] = latLonArr.value[middleIdx]
+
+  try {
+    const { data } = await apiGetNearAttractions(latitude, longitude)
+    nearAttractions.value = data
+  } catch (err) { console.dir(err) }
+}
+
+const bikeRoute = ref<BikeRoute>({})
+const latLonArr = ref<LatLonArr>([])
+const kilometer = computed(() => {
+  if (bikeRoute.value.CyclingLength) {
+    return Number((bikeRoute.value.CyclingLength / 1000).toFixed(1))
+  }
+  return 0
+})
+const getBikeRoute = async (routeName: string) => {
+  const city = chineseToEng(route.query._city as string)
+  try {
+    const { data } = await apiSearchRoute(city, routeName)
+    if (data[0].Geometry) {
+      latLonArr.value = formatLonLat(data[0].Geometry)
+    }
+    bikeRoute.value = data[0]
+    Promise.all([getRestaurants(), getAttractions()])
+  } catch (err) { console.dir(err) }
+}
+
+const formatLonLat = (geometry: string) => {
+  const arr: string[] = geometry.split('((')[1].split('))')[0].split(',')
+  const latLonArr: LatLonArr = []
+  arr.forEach((item) => {
+    let [lon, lat]: Array<string | number> = item.split(' ')
+    lat = lat ? Number(lat) : 0
+    lon = lon ? Number(lon) : 0
+    if (lon && lat) {
+      latLonArr.push([lat, lon])
+    }
+  })
+
+  return latLonArr
+}
+
+watch(() => route.params.id, (v) => {
+  if (v) getBikeRoute(v as string)
+}, { immediate: true })
+
 onMounted(() => {
   setRoutePanel()
 })
+
+const leafLetRef = ref()
+const handleRestaurantsShow = () => {
+  if (isRestaurantsShow.value) {
+    isRestaurantsShow.value = false
+    leafLetRef.value.removeRestaurantMarkers()
+  } else {
+    isRestaurantsShow.value = true
+    leafLetRef.value.setRestaurantMarkers()
+  }
+}
+
+const handleAttractionsShow = () => {
+  if (isAttractionsShow.value) {
+    isAttractionsShow.value = false
+    leafLetRef.value.removeAttractionMarkers()
+  } else {
+    isAttractionsShow.value = true
+    leafLetRef.value.setAttractionMarkers()
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -151,6 +249,10 @@ onMounted(() => {
   &::after {
     @apply -right-5
   }
+}
+.title {
+  max-width: 280px;
+  width: 100%;
 }
 .map {
   @apply w-full;

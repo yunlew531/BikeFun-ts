@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import setAuth from '@/composition/setAuth'
+import setAuth from '@/mixins/setAuth'
 
 setAuth()
 </script>

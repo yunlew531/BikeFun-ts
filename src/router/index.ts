@@ -10,6 +10,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/explore',
     name: 'Explore',
+    redirect: '/explore',
     component: () => import('@/views/Explore.vue'),
     children: [
       {

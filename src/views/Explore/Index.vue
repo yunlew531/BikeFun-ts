@@ -85,20 +85,27 @@
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, ref } from 'vue'
+import { defineAsyncComponent, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { getDistance } from 'geolib'
+import { chineseToEng } from '@/mixins/translateCity'
 import 'simplebar-vue/dist/simplebar.min.css'
 import 'simplebar-vue/dist/simplebar-vue.js'
 import cities from '@/assets/json/city.json'
 import { apiSearchRoute } from '@/api'
+import useLocation from '@/composition/useLocation'
 
 const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vue'))
 const RoutesSearchResult = defineAsyncComponent(() => import('@/components/Explore/RoutesSearchResult.vue'))
 const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'))
 
+const route = useRoute()
+const router = useRouter()
 const tempCity = ref<City | '請選擇縣市'>('請選擇縣市')
 const isLocate = ref(false)
 const isCityListShow = ref(false)
+const { myLocation, getLocation } = useLocation()
+getLocation()
 
 const selectCity = (city: City) => {
   tempCity.value = city
@@ -106,32 +113,45 @@ const selectCity = (city: City) => {
 }
 const searchText = ref('')
 
-const bikeRoutes = ref<BikeRoute[]>()
+const bikeRoutes = ref<BikeRoute[]>([])
 const searchRoute = async () => {
   if (tempCity.value === '請選擇縣市') return
+  router.push({
+    name: 'Explore',
+    query: {
+      _city: tempCity.value.chinese,
+      _content: searchText.value
+    }
+  })
+}
+
+watch(() => route.query, async (query) => {
+  const { _city, _content } = query
+  if (!_city && !_content) {
+    bikeRoutes.value = []
+    return
+  }
+  const engCity = chineseToEng(_city as string)
 
   try {
-    let data: BikeRoute[]
-    if (searchText.value) {
-      ({ data } = await apiSearchRoute(tempCity.value.eng, searchText.value))
-    } else {
-      ({ data } = await apiSearchRoute(tempCity.value.eng))
-    }
+    const { data } = await apiSearchRoute(engCity, searchText.value)
     data.forEach((bikeRoute, idx) => {
       data[idx].distance = calcDistance(bikeRoute.Geometry)
     })
     data.sort((a, b) => Number(a.distance) - Number(b.distance))
     bikeRoutes.value = data
   } catch (err) { console.dir(err) }
-}
+}, { immediate: true })
 
-const calcDistance = (geometry: string) => {
+const calcDistance = (geometry?: string) => {
+  if (!geometry) return
+
   const [longitude, latitude] = geometry.split('((')[1].split(',')[0].split(' ')
 
   let meters = 0
-  if (myPosition.value?.latitude) {
+  if (myLocation.value?.latitude) {
     meters = getDistance(
-      { latitude: myPosition.value.latitude, longitude: myPosition.value.longitude },
+      { latitude: myLocation.value.latitude, longitude: myLocation.value.longitude },
       { latitude, longitude }
     )
   }
@@ -149,19 +169,6 @@ const handleSort = (sortType: string) => {
     bikeRoutes.value.sort((a, b) => Number(b.distance) - Number(a.distance))
   }
 }
-
-const myPosition = ref<Coordinate>()
-const getLocation = () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      myPosition.value = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      }
-    })
-  }
-}
-getLocation()
 </script>
 
 <style lang="scss" scoped>

@@ -31,7 +31,7 @@
           v-for="(bikeRoute, key) in currentDisplay"
           :key="`${bikeRoute.RouteName}${key}`"
           class="flex flex-col group rounded-3xl overflow-hidden border border-gray cursor-pointer"
-          @click="router.push(`/explore/132?_city=${bikeRoute.City}`)"
+          @click="router.push(`/explore/${bikeRoute.RouteName}?_city=${bikeRoute.City}`)"
         >
           <div class="overflow-hidden">
             <img :src="bikeRoute.photo" alt="漁人碼頭" class="h-48 w-full duration-300 transform group-hover:scale-105">
@@ -39,7 +39,7 @@
           <div class="flex-grow flex items-stretch p-4">
             <div class="flex flex-col mr-auto">
               <h2 class="text-dark-200 mb-3">{{ bikeRoute.RouteName }}</h2>
-              <span class="block text-green-100 text-sm mt-auto">
+              <span v-if="bikeRoute.CyclingLength" class="block text-green-100 text-sm mt-auto">
                 雙向 {{ (bikeRoute.CyclingLength / 1000).toFixed(1) }} 公里
               </span>
             </div>
@@ -68,7 +68,7 @@
 import { ref, defineAsyncComponent, PropType, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { apiGetPhotos } from '@/api/index'
-import { getRandomArr } from '@/composition/handleRandom'
+import { getRandomArr } from '@/mixins/handleRandom'
 
 const Pagination = defineAsyncComponent(() => import('@/components/Pagination.vue'))
 
@@ -81,7 +81,7 @@ const props = defineProps({
 
 const router = useRouter()
 
-const photos = ref()
+const photos = ref([])
 const getPhotos = async () => {
   try {
     const { data } = await apiGetPhotos()
@@ -112,7 +112,7 @@ watch(sortType, (value) => {
 })
 
 const currentDisplay = computed(() => {
-  if (!pages.value.current) return
+  if (!pages.value.current || !photos.value.length) return
   const minIdx = (pages.value.current - 1) * 12
   const maxIdx = pages.value.current * 12 - 1
   const randomArr = getRandomArr(12, photos.value.length)

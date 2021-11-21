@@ -2,11 +2,14 @@
   <div class="wrap flex overflow-hidden">
     <div class="flex flex-col w-96 border-r border-l border-gray-100">
       <h3 class="h-16 flex justify-center items-center text-white-100 text-lg font-bold bg-yellow-100">站點列表</h3>
-      <ul data-simplebar class="station-list">
+      <ul
+        data-simplebar class="station-list"
+        data-simplebar-auto-hide="false"
+      >
         <li
           v-for="(station, key) in 15"
           :key="station"
-          class="border-b border-gray-100 -mb-px"
+          class="border-b border-gray-100 mr-3 -mb-px"
         >
           <div
             class="h-16 flex justify-center items-center px-5"
@@ -41,9 +44,9 @@
         <span class="material-icons mx-1">chevron_right</span>
         <router-link to="/station" class="text-dark-200">尋找站點</router-link>
         <span class="material-icons mx-1">chevron_right</span>
-        <h4 class="text-green-100">探索路線</h4>
+        <h4 class="text-green-100">尋找站點</h4>
       </div>
-      <div class="flex-grow border-t border-gray-100"></div>
+      <div class=" text-6xl flex-grow border-t border-gray-100">開發中</div>
     </div>
   </div>
 </template>
