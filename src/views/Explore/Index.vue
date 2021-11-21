@@ -49,7 +49,7 @@
         </div>
         <button
           type="button"
-          class="search-btn self-end text-white-100 bg-green-100 rounded-lg duration-200 px-11 py-2 hover:opacity-80 active:opacity-90"
+          class="search-btn self-end"
           :disabled="tempCity === '請選擇縣市'"
           @click="searchRoute"
         >
@@ -83,8 +83,8 @@ const isLocate = ref(false)
 const { myLocation, getLocation } = useLocation()
 getLocation()
 
-const citySelectorRef = ref()
-const tempCity = computed(() => citySelectorRef.value?.tempCity)
+const citySelectorRef = ref<InstanceType<typeof CitySelector>>()
+const tempCity = computed(() => (citySelectorRef.value as any)?.tempCity)
 
 const searchText = ref('')
 
@@ -162,13 +162,5 @@ const handleSort = (sortType: string) => {
 }
 .explore-search {
   box-shadow: 1px 4px 12px rgba(0, 0, 0, 0.2);
-}
-.search-btn {
-  &:disabled {
-    @apply bg-gray-600;
-    &:hover {
-      @apply opacity-100
-    }
-  }
 }
 </style>

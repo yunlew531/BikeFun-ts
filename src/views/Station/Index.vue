@@ -15,8 +15,8 @@
       </div>
       <div>
         <div class="border-l-4 border-yellow-100 pl-4 py-0.5 mb-12">
-          <h3 class="text-yellow-100 text-2xl font-bold mb-2">探索路線</h3>
-          <p class="text-sm text-dark-200">找到離您最近的自行車車道</p>
+          <h3 class="text-yellow-100 text-2xl font-bold mb-2">尋找站點</h3>
+          <p class="text-sm text-dark-200">找到離您最近的站點</p>
         </div>
         <span class="inline-block text-dark-200 mr-12 mb-2">開啟自動定位</span>
         <span
@@ -31,16 +31,12 @@
         </span>
       </div>
       <div>
-        <label class="block mb-6">
-          <span class="block w-36 text-dark-200 mb-2">手動輸入地址</span>
-          <input
-            type="text"
-            class="w-full border border-gray-100 rounded-lg p-3 focus:outline-none "
-            placeholder="請輸入關鍵字"
-          >
-        </label>
+        <span class="block text-dark-200 mb-2">選擇縣市</span>
+        <CitySelector
+          ref="citySeletorRef"
+        />
         <label class="block mb-8">
-          <span class="block w-36 text-dark-200 mb-2">站名關鍵字</span>
+          <span class="block text-dark-200 mb-2">關鍵字</span>
           <input
             type="text"
             class="w-full border border-gray-100 rounded-lg p-3 focus:outline-none "
@@ -51,8 +47,9 @@
       <div class="text-right">
         <button
           type="button"
-          class="self-end text-white-100 bg-green-100 rounded-lg duration-200 px-11 py-2 hover:opacity-80 active:opacity-90"
+          class="search-btn self-end"
           @click="router.push('/station/map')"
+          :disabled="tempCity === '請選擇縣市'"
         >
           GO !
         </button>
@@ -62,9 +59,15 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+const CitySelector = defineAsyncComponent(() => import('@/components/CitySelector.vue'))
+
 const router = useRouter()
+const citySeletorRef = ref<InstanceType<typeof CitySelector>>()
+const tempCity = computed(() => (citySeletorRef.value as any)?.tempCity)
+console.log('log => ', tempCity.value)
 </script>
 
 <style lang="scss" scoped>

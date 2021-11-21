@@ -2,22 +2,25 @@
   <div>
     <main class="main-wrap overflow-hidden">
       <section class="banner-bg absolute w-full left-0 right-0 flex justify-center items-center">
-        <div class="divide relative">
+        <div class="divide relative duration-1000" :class="{ 'opacity-0': !bikeRoute.RouteName }">
           <span class="block absolute text-white-100 text-5xl font-bold tracking-widest leading-normal left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
             {{ bikeRoute.RouteName }}
           </span>
         </div>
-        <div class="w-7 h-12 absolute left-1/2 bottom-40 transform -translate-x-1/2 border-2 border-white-100 rounded-full">
+        <div
+          class="w-7 h-12 absolute left-1/2 bottom-40 transform -translate-x-1/2 border-2 border-white-100 rounded-full duration-1000"
+          :class="{ 'opacity-0': !bikeRoute.RouteName }"
+        >
           <div class="mouse-wheel absolute left-1/2 top-2 w-2 h-2 bg-white-100 rounded-full"></div>
         </div>
       </section>
       <section class="route-container flex flex-col relative z-10 mx-auto">
         <div class="flex-grow"></div>
-        <div ref="routeRef" class="route-panel">
+        <div ref="routeRef" class="route-panel" :class="{ 'opacity-0': !bikeRoute.RouteName }">
           <div class="flex relative">
-            <Navigation class="absolute -top-24 left-0 right-0"/>
+            <Navigation class="absolute -top-24 left-0 right-0" />
             <Leaflet
-              ref="leafLetRef"
+              ref="leafletRef"
               class="map"
               :bikeLine="latLonArr"
               :restaurants="nearRestaurants"
@@ -27,7 +30,7 @@
               @hideAttraction="isAttractionsShow = false"
             />
             <div class=" flex-grow bg-white-100 px-10 py-4">
-              <div class="flex items-start py-4 mb-32">
+              <div class="flex items-start py-4 mb-24">
                 <router-link to="/" class="flex-shrink-0">首頁</router-link>
                 <span class="material-icons mx-1">chevron_right</span>
                 <router-link to="/explore" class="flex-shrink-0">探索路線</router-link>
@@ -101,7 +104,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, ref, onMounted, watch, computed } from 'vue'
+import { defineAsyncComponent, ref, watch, computed, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useWheel } from '@/composition/handleWheel'
 import { chineseToEng } from '@/mixins/translateCity'
@@ -115,7 +118,7 @@ const route = useRoute()
 const { wheelDirection } = useWheel()
 const isRestaurantsShow = ref(false)
 const isAttractionsShow = ref(false)
-const routeRef = ref()
+const routeRef = ref<HTMLElement>()
 const routeRefTranslateY = ref<number>()
 const translateY = computed(() => `translateY(${routeRefTranslateY.value}px)`)
 
@@ -123,16 +126,13 @@ watch(wheelDirection, (direction) => {
   if (direction === 'down') {
     routeRefTranslateY.value = 0
   } else if (direction === 'up') {
-    const height: number = routeRef.value.offsetHeight
+    const height: number = routeRef.value!.offsetHeight
     routeRefTranslateY.value = height
   }
 })
 
 const setRoutePanel = () => {
-  setTimeout(() => {
-    routeRef.value.style.transition = 'transform 0.3s'
-  }, 500)
-  const height: number = routeRef.value.offsetHeight
+  const height: number = routeRef.value!.offsetHeight
   routeRefTranslateY.value = height
 }
 
@@ -176,6 +176,9 @@ const getBikeRoute = async (routeName: string) => {
       latLonArr.value = formatLonLat(data[0].Geometry)
     }
     bikeRoute.value = data[0]
+    nextTick(() => {
+      setRoutePanel()
+    })
     Promise.all([getRestaurants(), getAttractions()])
   } catch (err) { console.dir(err) }
 }
@@ -199,28 +202,24 @@ watch(() => route.params.id, (v) => {
   if (v) getBikeRoute(v as string)
 }, { immediate: true })
 
-onMounted(() => {
-  setRoutePanel()
-})
-
-const leafLetRef = ref()
+const leafletRef = ref<InstanceType<typeof Leaflet>>()
 const handleRestaurantsShow = () => {
   if (isRestaurantsShow.value) {
     isRestaurantsShow.value = false
-    leafLetRef.value.removeRestaurantMarkers()
+    ;(leafletRef.value as any).removeRestaurantMarkers()
   } else {
     isRestaurantsShow.value = true
-    leafLetRef.value.setRestaurantMarkers()
+    ;(leafletRef.value as any).setRestaurantMarkers()
   }
 }
 
 const handleAttractionsShow = () => {
   if (isAttractionsShow.value) {
     isAttractionsShow.value = false
-    leafLetRef.value.removeAttractionMarkers()
+    ;(leafletRef.value as any).removeAttractionMarkers()
   } else {
     isAttractionsShow.value = true
-    leafLetRef.value.setAttractionMarkers()
+    ;(leafletRef.value as any).setAttractionMarkers()
   }
 }
 </script>
@@ -266,6 +265,7 @@ const handleAttractionsShow = () => {
 }
 .route-panel {
   transform: v-bind(translateY);
+  transition: opacity 1s 0.7s, transform 0.3s;
 }
 .bike-img {
   width: 158px;

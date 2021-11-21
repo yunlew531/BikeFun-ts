@@ -31,14 +31,12 @@
 import { ref } from 'vue'
 import cities from '@/assets/json/city.json'
 
-const emits = defineEmits(['change'])
 const isCityListShow = ref(false)
 const tempCity = ref<City | '請選擇縣市'>('請選擇縣市')
 
 const selectCity = (city: City) => {
   tempCity.value = city
   isCityListShow.value = false
-  emits('change', tempCity.value)
 }
 
 defineExpose({

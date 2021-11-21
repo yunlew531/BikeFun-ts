@@ -11,3 +11,12 @@ body {
 img {
   @apply object-cover;
 }
+
+@layer components {
+  .search-btn {
+    @apply text-white-100 bg-green-100 rounded-lg duration-200 px-11 py-2 hover:opacity-80 active:opacity-90;
+    &:disabled {
+      @apply bg-gray-600 hover:opacity-100;
+    }
+  }
+}
