@@ -32,32 +32,10 @@
         <div class="flex-grow">
           <div class="flex items-center mb-12 mr-24">
             <span class="inline-block w-36 text-dark-200">選擇縣市</span>
-            <div class="flex-grow relative">
-              <button
-                type="button"
-                class="w-full border border-gray-100 text-gray-600 text-left rounded-lg p-3 mb-2"
-                @click="isCityListShow = !isCityListShow"
-              >
-                {{ typeof tempCity === 'string' ? tempCity : tempCity.chinese }}
-              </button>
-              <div class="absolute left-0 right-0 z-10">
-                <ul
-                  v-show="isCityListShow"
-                  data-simplebar
-                  data-simplebar-auto-hide="false"
-                  class="city-list border border-gray-100 bg-white-100 shadow-lg rounded-lg"
-                >
-                  <li
-                    v-for="city in cities.data"
-                    :key="city.chinese"
-                    class="city-item cursor-pointer p-3 mr-4 hover:bg-gray-50 hover:text-green-100"
-                    @click="selectCity(city)"
-                  >
-                    {{ city.chinese }}
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <CitySelector
+              ref="citySelectorRef"
+              class="flex-grow"
+            />
           </div>
           <label class="flex items-center mr-24">
             <span class="inline-block w-36 text-dark-200">關鍵字</span>
@@ -85,32 +63,29 @@
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, ref, watch } from 'vue'
+import { defineAsyncComponent, ref, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getDistance } from 'geolib'
-import { chineseToEng } from '@/mixins/translateCity'
-import 'simplebar-vue/dist/simplebar.min.css'
-import 'simplebar-vue/dist/simplebar-vue.js'
-import cities from '@/assets/json/city.json'
 import { apiSearchRoute } from '@/api'
+import { chineseToEng } from '@/mixins/translateCity'
 import useLocation from '@/composition/useLocation'
+import { getDistance } from 'geolib'
+import 'simplebar-vue/dist/simplebar-vue.js'
+import 'simplebar-vue/dist/simplebar.min.css'
 
 const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vue'))
 const RoutesSearchResult = defineAsyncComponent(() => import('@/components/Explore/RoutesSearchResult.vue'))
 const Footer = defineAsyncComponent(() => import('@/components/Footer.vue'))
+const CitySelector = defineAsyncComponent(() => import('@/components/CitySelector.vue'))
 
 const route = useRoute()
 const router = useRouter()
-const tempCity = ref<City | '請選擇縣市'>('請選擇縣市')
 const isLocate = ref(false)
-const isCityListShow = ref(false)
 const { myLocation, getLocation } = useLocation()
 getLocation()
 
-const selectCity = (city: City) => {
-  tempCity.value = city
-  isCityListShow.value = false
-}
+const citySelectorRef = ref()
+const tempCity = computed(() => citySelectorRef.value?.tempCity)
+
 const searchText = ref('')
 
 const bikeRoutes = ref<BikeRoute[]>([])
@@ -132,7 +107,6 @@ watch(() => route.query, async (query) => {
     return
   }
   const engCity = chineseToEng(_city as string)
-
   try {
     const { data } = await apiSearchRoute(engCity, searchText.value)
     data.forEach((bikeRoute, idx) => {
@@ -188,15 +162,6 @@ const handleSort = (sortType: string) => {
 }
 .explore-search {
   box-shadow: 1px 4px 12px rgba(0, 0, 0, 0.2);
-}
-.city-list {
-  height: 300px;
-}
-.city-item {
-  @apply border-b border-gray-100;
-  &:last-of-type {
-    @apply border-0;
-  }
 }
 .search-btn {
   &:disabled {

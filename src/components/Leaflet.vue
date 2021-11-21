@@ -33,9 +33,9 @@ const setMap = (latLonArr: LatLonArr) => {
   const zoom = props.kilometer > 7 ? 13 : 15
   const middleIdx = Math.floor(latLonArr.length / 2)
   map = L.map('map-container').setView(latLonArr[middleIdx], zoom)
-  L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
-    attribution: 'Map data: © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: © <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map)
 
   L.polyline(props.bikeLine).addTo(map)

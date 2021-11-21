@@ -29,7 +29,7 @@
       <ul class="grid grid-cols-3 gap-7">
         <li
           v-for="(bikeRoute, key) in currentDisplay"
-          :key="`${bikeRoute.RouteName}${key}`"
+          :key="`${bikeRoute.RouteName}-${key}`"
           class="flex flex-col group rounded-3xl overflow-hidden border border-gray cursor-pointer"
           @click="router.push(`/explore/${bikeRoute.RouteName}?_city=${bikeRoute.City}`)"
         >
@@ -80,7 +80,6 @@ const props = defineProps({
 })
 
 const router = useRouter()
-
 const photos = ref([])
 const getPhotos = async () => {
   try {
@@ -97,7 +96,7 @@ watch(() => props.bikeRoutes, (value: BikeRoute[]) => {
     total,
     current: 1
   }
-})
+}, { immediate: true })
 
 const sortType = ref<sortType>('nearToFar')
 
