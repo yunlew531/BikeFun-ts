@@ -9,9 +9,8 @@ export const apiGetNearRestaurants = (lat: number, lon: number) =>
 export const apiGetNearAttractions = (lat: number, lon: number) =>
   tdxReq.get(`/v2/Tourism/ScenicSpot?$spatialFilter=nearby(${lat}, ${lon}, 5000)`)
 export const apiGetStations = (city: string, searchText?: string) =>
-  tdxReq.get(`/v2/Bike/Station/${city}${searchText ? `?$filter=contains(StationName, ${searchText})` : ''}`)
-export const apiGetBikeQty = (city: string, searchText?: string) =>
-  tdxReq.get(`/v2/Bike/Availability/${city}${searchText ? `?$filter=contains(StationName, ${searchText})` : ''}`)
+  tdxReq.get(`/v2/Bike/Station/${city}${searchText ? `?$filter=contains(StationName/Zh_tw, '${searchText}')` : ''}`)
+export const apiGetBikeQty = (city: string) => tdxReq.get(`/v2/Bike/Availability/${city}`)
 
 // mocky server
 export const apiGetPhotos = () => mockyReq.get('/v3/597bbe5a-a110-4314-83dd-c8207cec80bf')

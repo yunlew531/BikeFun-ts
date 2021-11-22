@@ -58,14 +58,15 @@ const getStations = async () => {
 const updateCurrentStation = (station: BikeStation) => { currentStation.value = station }
 
 const getBikeQty = async (stationsObj: { [key: string]: BikeStation}) => {
-  const { _city, _content } = route.query
+  const { _city } = route.query
   if (!_city) return
   const engCity = chineseToEng(route.query._city as string)
   try {
-    const { data } = await apiGetBikeQty(engCity, _content as string)
+    const { data } = await apiGetBikeQty(engCity)
     data.forEach((station: BikeStation) => {
       const uid = station.StationUID
-      if (uid) stationsObj[uid] = { ...stationsObj[uid], ...station }
+      if (!uid || !stationsObj[uid]?.StationName) return
+      stationsObj[uid] = { ...stationsObj[uid], ...station }
     })
     stations.value = Object.values(stationsObj)
   } catch (err) { console.dir(err) }
