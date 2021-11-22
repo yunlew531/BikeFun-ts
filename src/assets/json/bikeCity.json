@@ -1,0 +1,14 @@
+{
+  "data": [
+    {"chinese": "臺北市", "eng": "Taipei"},
+    {"chinese": "新北市", "eng": "NewTaipei"},
+    {"chinese": "桃園市", "eng": "Taoyuan"},
+    {"chinese": "臺中市", "eng": "Taichung"},
+    {"chinese": "臺南市", "eng": "Tainan"},
+    {"chinese": "高雄市", "eng": "Kaohsiung"},
+    {"chinese": "苗栗縣", "eng": "MiaoliCounty"},
+    {"chinese": "嘉義市", "eng": "Chiayi"},
+    {"chinese": "屏東縣", "eng": "PingtungCounty"},
+    {"chinese": "金門縣", "eng": "KinmenCounty"}
+  ]
+}

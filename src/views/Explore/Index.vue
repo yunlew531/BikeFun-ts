@@ -31,10 +31,14 @@
         </div>
         <div class="flex-grow">
           <div class="flex items-center mb-12 mr-24">
-            <span class="inline-block w-36 text-dark-200">選擇縣市</span>
+            <p class="flex items-center w-36 text-dark-200">
+              <span class="mr-1">選擇縣市</span>
+              <span class="text-sm text-red-400">*必選</span>
+            </p>
             <CitySelector
               ref="citySelectorRef"
               class="flex-grow"
+              :cities="cities"
             />
           </div>
           <label class="flex items-center mr-24">
@@ -69,8 +73,7 @@ import { apiSearchRoute } from '@/api'
 import { chineseToEng } from '@/mixins/translateCity'
 import useLocation from '@/composition/useLocation'
 import { getDistance } from 'geolib'
-import 'simplebar-vue/dist/simplebar-vue.js'
-import 'simplebar-vue/dist/simplebar.min.css'
+import cities from '@/assets/json/city.json'
 
 const Navigation = defineAsyncComponent(() => import('@/components/Navigation.vue'))
 const RoutesSearchResult = defineAsyncComponent(() => import('@/components/Explore/RoutesSearchResult.vue'))

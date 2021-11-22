@@ -64,3 +64,14 @@ interface NearAttraction {
   ZipCode: string;
   Picture: { PictureUrl1: string }
 }
+
+interface BikeStation {
+  StationAddress?: { Zh_tw: string }
+  StationUID?: string;
+  StationName?: { Zh_tw }
+  StationPosition?: { PositionLat: number, PositionLon: number }
+  AvailableRentBikes?: number;
+  AvailableReturnBikes?: number;
+  ServiceType?: number;
+  ServiceStatus?: number;
+}

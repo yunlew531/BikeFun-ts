@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 let map: any
-const setMap = (latLonArr: LatLonArr) => {
+const createMap = (latLonArr: LatLonArr) => {
   const zoom = props.kilometer > 7 ? 13 : 15
   const middleIdx = Math.floor(latLonArr.length / 2)
   map = L.map('map-container').setView(latLonArr[middleIdx], zoom)
@@ -160,7 +160,7 @@ const removeAttractionMarkers = () => {
 }
 
 watch(() => props.bikeLine, (latLonArr) => {
-  setMap(latLonArr)
+  createMap(latLonArr)
 })
 
 defineExpose({

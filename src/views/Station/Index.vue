@@ -31,13 +31,18 @@
         </span>
       </div>
       <div>
-        <span class="block text-dark-200 mb-2">選擇縣市</span>
+        <p class="flex items-center w-36 text-dark-200 mb-2">
+          <span class="mr-1">選擇縣市</span>
+          <span class="text-sm text-red-400">*必選</span>
+        </p>
         <CitySelector
           ref="citySeletorRef"
+          :cities="cities"
         />
         <label class="block mb-8">
           <span class="block text-dark-200 mb-2">關鍵字</span>
           <input
+            v-model="searchText"
             type="text"
             class="w-full border border-gray-100 rounded-lg p-3 focus:outline-none "
             placeholder="請輸入關鍵字"
@@ -48,7 +53,7 @@
         <button
           type="button"
           class="search-btn self-end"
-          @click="router.push('/station/map')"
+          @click="router.push({ name: 'Map', query: { _city: tempCity.chinese, _content: searchText }})"
           :disabled="tempCity === '請選擇縣市'"
         >
           GO !
@@ -61,13 +66,15 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import cities from '@/assets/json/bikeCity.json'
 
 const CitySelector = defineAsyncComponent(() => import('@/components/CitySelector.vue'))
 
 const router = useRouter()
 const citySeletorRef = ref<InstanceType<typeof CitySelector>>()
 const tempCity = computed(() => (citySeletorRef.value as any)?.tempCity)
-console.log('log => ', tempCity.value)
+
+const searchText = ref('')
 </script>
 
 <style lang="scss" scoped>
