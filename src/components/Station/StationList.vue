@@ -67,8 +67,8 @@ onMounted(() => {
 })
 
 const stationRefs = ref<HTMLElement[]>([])
-const formatName = (name: string) => name.split('_')[1]
-const formatBikeVer = (name: string) => name.split('_')[0]
+const formatName = (name: string) => name.split('_')[1] || name
+const formatBikeVer = (name: string) => name.split('_')[0].match('YouBike') ? name.split('_')[0] : ''
 
 const emits = defineEmits(['updateCurrentStation'])
 const toggleCurrentStation = (station: BikeStation) => {

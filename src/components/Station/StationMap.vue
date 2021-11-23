@@ -76,8 +76,6 @@ function handleMarkerClick () {
   const uid = this.uid
   const idx = props.stations.findIndex(station => station.StationUID === uid)
   const station = props.stations[idx]
-  // // @ts-ignore
-  // this.setIcon(redIcon)
   emits('updateCurrentStation', station)
 }
 
