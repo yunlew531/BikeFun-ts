@@ -79,17 +79,17 @@ const setRestaurantMarkers = () => {
 
   const { restaurants } = props
   restaurants.forEach((restaurant) => {
-    const { Position, Name, Address, Phone, Picture } = restaurant
+    const { Position, RestaurantName, Address, Phone, Picture } = restaurant
     const { PositionLat, PositionLon } = Position
     const marker = L.marker([PositionLat, PositionLon], { icon: restaurantIcon })
-      .bindTooltip(Name, {
+      .bindTooltip(RestaurantName, {
         permanent: true,
         direction: 'right'
       })
       .bindPopup(`
         <div class="flex items-stretch w-full h-full">
           <div class="flex-grow h-full pt-4 px-4 pb-6">
-            <h3 class="text-yellow-100 text-lg pl-4 border-l-4 border-yellow-100 mb-2">${Name}</h3>
+            <h3 class="text-yellow-100 text-lg pl-4 border-l-4 border-yellow-100 mb-2">${RestaurantName}</h3>
             <div class="flex">
               <span class="material-icons text-yellow-100 mr-1.5">room</span>
               <p class="text-dark-200 text-sm">${Address || '無地址'}</p>
@@ -124,17 +124,17 @@ const setAttractionMarkers = () => {
 
   const { attractions } = props
   attractions.forEach((attraction) => {
-    const { Position, Name, Address, Phone, Picture } = attraction
+    const { Position, ScenicSpotName, Address, Phone, Picture } = attraction
     const { PositionLat, PositionLon } = Position
     const marker = L.marker([PositionLat, PositionLon], { icon: attractionIcon })
-      .bindTooltip(Name, {
+      .bindTooltip(ScenicSpotName, {
         permanent: true,
         direction: 'right'
       })
       .bindPopup(`
         <div class="flex items-stretch w-full h-full">
           <div class="flex-grow h-full pt-4 px-4 pb-6">
-            <h3 class="text-yellow-100 text-lg pl-4 border-l-4 border-yellow-100 mb-2">${Name}</h3>
+            <h3 class="text-yellow-100 text-lg pl-4 border-l-4 border-yellow-100 mb-2">${ScenicSpotName}</h3>
             <div class="flex">
               <span class="material-icons text-yellow-100 mr-1.5">room</span>
               <p class="text-dark-200 text-sm">${Address || '無地址'}</p>

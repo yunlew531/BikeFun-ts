@@ -42,7 +42,7 @@ interface NearRestaurant {
   City: string;
   Description: string;
   ID: string;
-  Name: string;
+  RestaurantName: string;
   OpenTime: string;
   ParkingInfo: string;
   Phone: string;
@@ -56,7 +56,7 @@ interface NearAttraction {
   City: string;
   Description: string;
   ID: string;
-  Name: string;
+  ScenicSpotName: string;
   OpenTime: string;
   ParkingInfo: string;
   Phone: string;
@@ -66,8 +66,10 @@ interface NearAttraction {
 }
 
 interface BikeStation {
+  // eslint-disable-next-line camelcase
   StationAddress?: { Zh_tw: string }
   StationUID?: string;
+  // eslint-disable-next-line camelcase
   StationName?: { Zh_tw }
   StationPosition?: { PositionLat: number, PositionLon: number }
   AvailableRentBikes?: number;
