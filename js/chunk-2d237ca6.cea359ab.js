@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d237ca6"],{fd2d:function(e,t,n){"use strict";n.r(t);var c=n("7a23");const r=Object(c["g"])("footer",{class:"text-center bg-yellow-100 p-7"},[Object(c["g"])("p",{class:"text-white-100 text-xl leading-tight"},"BikeFun © 2021 Designer Vum. Engineer LEEE. All rights reserved.")],-1),s=[r];function i(e,t){return Object(c["v"])(),Object(c["f"])("div",null,s)}var d=n("d959"),l=n.n(d);const o={},a=l()(o,[["render",i]]);t["default"]=a}}]);
+//# sourceMappingURL=chunk-2d237ca6.cea359ab.js.map
